@@ -1,6 +1,6 @@
 import sys
-
 import pygame
+
 from configuracion import Configuracion as Confi
 from nave import Nave
 
