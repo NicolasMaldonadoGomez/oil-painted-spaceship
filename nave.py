@@ -33,7 +33,7 @@ class Nave:
         self.rect.x = self.x
 
 
-    def blitme(self):
+    def dibujame(self):
         self.pantalla.blit(self.imagen_nave, self.rect)
         # self.pantalla.blit(self.imagen_fuego , self.rect)
     
