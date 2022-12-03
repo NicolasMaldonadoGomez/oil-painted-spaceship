@@ -1,6 +1,7 @@
 import sys
 import pygame
 
+
 from configuracion import Configuracion
 from nave import Nave
 
@@ -58,15 +59,15 @@ class Invasion:
 
 
     def cuenta_fps(self):
-        self.fps       = str(int(self.reloj.get_fps()))
+        self.fps = str(int(self.reloj.get_fps()))
         self.texto_fps = self.fuente.render(self.fps, 1, pygame.Color(COLOR_CLARO))
         self.pantalla.blit(self.texto_fps,(0,0))
         self.reloj.tick(self.configuracion.fps)
 
 
     def actualizar_pantalla(self):
-        self.nave.actualizar_nave()
         self.pantalla.fill(self.configuracion.pantalla_color)
+        self.nave.actualizar_nave()
         self.nave.dibujame()
         self.cuenta_fps()
         pygame.display.flip() #dibuja la pantalla
