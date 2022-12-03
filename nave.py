@@ -20,17 +20,20 @@ class Nave:
 
         # la nave empieza en el centro de abajo
         self.rect.midbottom = self.pantalla_rect.midbottom
+
+        # Traemos la configuracion de velocidad del juego
+        self.velocidad = juego_invasion.configuracion.velocidad
+        self.x = float(self.rect.x)
     
     def actualizar_nave(self):
-        if self.moviendose_derecha:
-            self.rect.x += 1
-            self.rect_fuego.x += 1
-        if self.moviendose_izquierda:
-            self.rect.x -= 1
-            self.rect_fuego.x -= 1
+        if self.moviendose_derecha and self.rect.x < (self.pantalla_rect.right-100):
+            self.x += self.velocidad
+        if self.moviendose_izquierda and self.rect.x > 0:
+            self.x -=  self.velocidad
+        self.rect.x = self.x
 
 
     def blitme(self):
         self.pantalla.blit(self.imagen_nave, self.rect)
-        self.pantalla.blit(self.imagen_fuego , self.rect)
+        # self.pantalla.blit(self.imagen_fuego , self.rect)
     
