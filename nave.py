@@ -22,6 +22,13 @@ class Nave:
         self.imagen_fuego = pygame.image.load('imagenes/jet25.png')
         self.rect_fuego   = self.imagen_fuego.get_rect()
 
+        self.crear_propulsores(juego_invasion)
+
+        # Traemos la configuracion de velocidad del juego
+        self.velocidad = juego_invasion.configuracion.velocidad
+        self.x = float(self.rect_nave.x)
+
+    def crear_propulsores(self,juego_invasion):
         # creamos las imagenes de los propulsores derecho e izquierdo
         self.imagen_fuego_propulsor_izquierdo = pygame.transform.rotate(pygame.transform.scale(self.imagen_fuego,juego_invasion.configuracion.tamaño_propulsores),270)
         self.rect_propulsor_izquierdo = self.imagen_fuego_propulsor_izquierdo.get_rect()
@@ -33,11 +40,6 @@ class Nave:
         self.rect_propulsor_izquierdo.topright = self.rect_nave.topleft
         self.rect_propulsor_izquierdo.y += 40
         self.rect_propulsor_derecho.y += 40
-        
-
-        # Traemos la configuracion de velocidad del juego
-        self.velocidad = juego_invasion.configuracion.velocidad
-        self.x = float(self.rect_nave.x)
     
     def actualizar_nave(self):
         if self.moviendose_derecha and self.rect_nave.x < (self.pantalla_rect.right-100):
