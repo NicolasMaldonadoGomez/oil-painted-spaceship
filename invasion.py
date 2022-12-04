@@ -37,6 +37,7 @@ class Invasion:
             self.administrar_eventos()
             self.actualizar_pantalla()
             self.balas.update()
+            self._actualiza_aliens()
     
     def administrar_eventos(self):
         for evento in pygame.event.get():                
@@ -115,21 +116,38 @@ class Invasion:
 
         self.reloj.tick(self.configuracion.fps)
 
-    def actualiza_balas(self):
+    def _actualiza_balas(self):
         for bala in self.balas.sprites():
             bala.dibujar_bala()
-            if bala.rect_bala.bottom<0:
+            if bala.rect.bottom<0:
                 self.balas.remove(bala)
+        colisiones = pygame.sprite.groupcollide(self.balas,self.aliens,True, True)
+
+    def _actualiza_aliens(self):
+        self.aliens.update()
+        self.revisa_borde_pantalla()
+            #self.Bajar_nivel_flota()
+            #self.cambiar_orientacion_flota()
+    
+    def revisa_borde_pantalla(self):
+        cambia_orientacion = False
+        for alien in self.aliens.sprites():
+            if alien.rect.x > (self.configuracion.pantalla_ancho-80) or  (alien.rect.x < 1):
+                cambia_orientacion = True
+                break
+        if cambia_orientacion:
+            for alien in self.aliens.sprites():
+                alien.orientacion *= -1
+                alien.rect.y += self.configuracion.alien_caida   
+
 
     def actualizar_pantalla(self):
-        
-
         self.pantalla.fill(self.configuracion.pantalla_color)
         self.estrellas.draw(self.pantalla)
         self.nave.actualizar_nave()
         self.nave.aparecer()
-        self.actualiza_balas()
-        
+        self._actualiza_balas()
+        # self.actualiza_aliens()
         self.aliens.draw(self.pantalla)
         self.cuenta_fps()
         pygame.display.flip() #dibuja la pantalla

@@ -12,9 +12,11 @@ class Configuracion:
         self.bala_alto          = 10
         self.bala_color         = (220, 150, 150)
         self.balas_permitidas   = 3
-        self.estrella_filas     = 15
-        self.estrella_columnas  = 15
+        self.estrella_filas     = 1#subir en produccion
+        self.estrella_columnas  = 1#subir en produccion
         self.estrella_tamaño    = 25
+        self.alien_velocidad    = 3
+        self.alien_caida        = 20
 
         '''configuracion calculadas'''
 
