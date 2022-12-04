@@ -5,6 +5,7 @@ from configuracion import Configuracion
 from nave import Nave
 from bala import Bala
 from aliens import Alien
+from stars import Star
 
 
 COLOR_CLARO =(220,220,220)
@@ -23,7 +24,9 @@ class Invasion:
         #grupo para las balas
         self.balas = pygame.sprite.Group()
         self.aliens = pygame.sprite.Group()
+        self.estrellas = pygame.sprite.Group()
         self._crear_flota_alienigena()
+        self.crear_cielo()
         # Para el tema de las fps
         self.reloj = pygame.time.Clock()
         self.fuente = pygame.font.SysFont("msgothic", 18)
@@ -69,19 +72,32 @@ class Invasion:
             nueva_bala = Bala(self)
             self.balas.add(nueva_bala)
 
+    def crear_cielo(self):
+        for numero_fila in range(self.configuracion.estrella_filas):
+            for numero_estrella in range(self.configuracion.estrella_columnas):
+                estrella = Star(self, self.configuracion.espacio_entre_estrellas * numero_estrella, numero_fila * self.configuracion.espacio_entre_filas_de_estrellas)
+                self.estrellas.add(estrella)
+
     def _crear_flota_alienigena(self):
         nuevo_alien = Alien(self)
-        espacio_disponible_x = self.configuracion.pantalla_ancho - nuevo_alien.rect.width
-        columnas_de_aliens = int(espacio_disponible_x // (1.5 * nuevo_alien.rect.width))
+        alien_ancho, alien_alto = nuevo_alien.rect.size
+        altura_nave = self.nave.rect_nave.height
+        espacio_disponible_y = (self.configuracion.pantalla_alto - 5 * alien_alto-altura_nave)
+        numero_de_filas = espacio_disponible_y // ( 2 * alien_alto )
+        espacio_disponible_x = self.configuracion.pantalla_ancho - 2 * alien_ancho
+        columnas_de_aliens = int(espacio_disponible_x // (1.5 * alien_ancho))
+        for cuenta_filas in range(numero_de_filas):
+            self._crear_fila(columnas_de_aliens,cuenta_filas)
 
+
+    def _crear_fila(self, columnas_de_aliens, cuenta_filas):
         for cuenta_alien in range(columnas_de_aliens):
             nuevo_alien = Alien(self)
-            nuevo_alien.x = float(nuevo_alien.rect.width) * ( 0.5 + 2*cuenta_alien )
-            nuevo_alien.rect.x = nuevo_alien.x
-            self.aliens.add(nuevo_alien)
+            nuevo_alien.x = float(nuevo_alien.rect.width) * ( 1 + 1.8 * cuenta_alien )
             
-
-        self.aliens.add(nuevo_alien)
+            nuevo_alien.rect.x = nuevo_alien.x
+            nuevo_alien.rect.y = nuevo_alien.rect.height * ( 2 + 2 * cuenta_filas)
+            self.aliens.add(nuevo_alien)
 
 
     def cuenta_fps(self):
@@ -92,16 +108,28 @@ class Invasion:
         self.cantidad_balas="Balas:"+str(len(self.balas))
         self.texto_balas = self.fuente.render(self.cantidad_balas, 1, pygame.Color(COLOR_CLARO))
         self.pantalla.blit(self.texto_balas,(0,20))
+
+        self.cantidad_aliens="Invasores:"+str(len(self.aliens))
+        self.texto_aliens = self.fuente.render(self.cantidad_aliens, 1, pygame.Color(COLOR_CLARO))
+        self.pantalla.blit(self.texto_aliens,(0,40))
+
         self.reloj.tick(self.configuracion.fps)
 
-    def actualizar_pantalla(self):
-        self.pantalla.fill(self.configuracion.pantalla_color)
-        self.nave.actualizar_nave()
-        self.nave.aparecer()
+    def actualiza_balas(self):
         for bala in self.balas.sprites():
             bala.dibujar_bala()
             if bala.rect_bala.bottom<0:
                 self.balas.remove(bala)
+
+    def actualizar_pantalla(self):
+        
+
+        self.pantalla.fill(self.configuracion.pantalla_color)
+        self.estrellas.draw(self.pantalla)
+        self.nave.actualizar_nave()
+        self.nave.aparecer()
+        self.actualiza_balas()
+        
         self.aliens.draw(self.pantalla)
         self.cuenta_fps()
         pygame.display.flip() #dibuja la pantalla
