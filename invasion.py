@@ -4,6 +4,7 @@ import pygame
 from configuracion import Configuracion
 from nave import Nave
 from bala import Bala
+from aliens import Alien
 
 
 COLOR_CLARO =(220,220,220)
@@ -21,6 +22,8 @@ class Invasion:
         self.nave = Nave(self)
         #grupo para las balas
         self.balas = pygame.sprite.Group()
+        self.aliens = pygame.sprite.Group()
+        self._crear_flota_alienigena()
         # Para el tema de las fps
         self.reloj = pygame.time.Clock()
         self.fuente = pygame.font.SysFont("msgothic", 18)
@@ -66,6 +69,20 @@ class Invasion:
             nueva_bala = Bala(self)
             self.balas.add(nueva_bala)
 
+    def _crear_flota_alienigena(self):
+        nuevo_alien = Alien(self)
+        espacio_disponible_x = self.configuracion.pantalla_ancho - nuevo_alien.rect.width
+        columnas_de_aliens = int(espacio_disponible_x // (1.5 * nuevo_alien.rect.width))
+
+        for cuenta_alien in range(columnas_de_aliens):
+            nuevo_alien = Alien(self)
+            nuevo_alien.x = float(nuevo_alien.rect.width) * ( 0.5 + 2*cuenta_alien )
+            nuevo_alien.rect.x = nuevo_alien.x
+            self.aliens.add(nuevo_alien)
+            
+
+        self.aliens.add(nuevo_alien)
+
 
     def cuenta_fps(self):
         self.fps = str(int(self.reloj.get_fps()))
@@ -85,7 +102,7 @@ class Invasion:
             bala.dibujar_bala()
             if bala.rect_bala.bottom<0:
                 self.balas.remove(bala)
-            
+        self.aliens.draw(self.pantalla)
         self.cuenta_fps()
         pygame.display.flip() #dibuja la pantalla
 
