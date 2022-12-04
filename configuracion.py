@@ -6,4 +6,12 @@ class Configuracion:
         self.velocidad          = 10
         self.fps                = 50
         self.tamaño_propulsores = (20,150)
-        print(vars(self))
+        self.bala_velocidad     = 16.0
+        self.bala_ancho         = 3
+        self.bala_alto          = 10
+        self.bala_color         = (220, 150, 150)
+        self.balas_permitidas   = 3
+        # print() #espacio para ver mejor la consola
+        # print(vars(self))
+        # print() #espacio para ver mejor la consola
+

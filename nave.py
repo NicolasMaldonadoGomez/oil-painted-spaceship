@@ -60,7 +60,7 @@ class Nave:
             self.rect_propulsor_derecho.x = self.x-8
             self.pantalla.blit(self.imagen_fuego_propulsor_derecho, self.rect_propulsor_derecho)
 
-    def dibujame(self):
+    def aparecer(self):
         self.pantalla.blit(self.imagen_nave, self.rect_nave)
         # self.pantalla.blit(self.imagen_fuego , self.rect_nave)
     

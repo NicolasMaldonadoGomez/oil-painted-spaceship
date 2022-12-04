@@ -1,11 +1,10 @@
 import sys
 import pygame
 
-
 from configuracion import Configuracion
 from nave import Nave
+from bala import Bala
 
-print() #espacio para ver mejor la consola
 
 COLOR_CLARO =(220,220,220)
 
@@ -20,6 +19,8 @@ class Invasion:
         self.pantalla = pygame.display.set_mode((self.configuracion.pantalla_ancho, self.configuracion.pantalla_alto))
         pygame.display.set_caption("¡¡¡INVASION!!!")
         self.nave = Nave(self)
+        #grupo para las balas
+        self.balas = pygame.sprite.Group()
         # Para el tema de las fps
         self.reloj = pygame.time.Clock()
         self.fuente = pygame.font.SysFont("msgothic", 18)
@@ -29,6 +30,7 @@ class Invasion:
         while True:
             self.administrar_eventos()
             self.actualizar_pantalla()
+            self.balas.update()
     
     def administrar_eventos(self):
         for evento in pygame.event.get():                
@@ -45,6 +47,8 @@ class Invasion:
                 self.nave.moviendose_derecha = True
             case pygame.K_LEFT:
                 self.nave.moviendose_izquierda = True
+            case pygame.K_LCTRL:
+                self.disparar_bala()
 
     def revisar_teclas_soltadas(self, evento):
         match evento.key: 
@@ -56,19 +60,32 @@ class Invasion:
                 sys.exit()
             case pygame.K_ESCAPE:
                 sys.exit()
+    
+    def disparar_bala(self):
+        if len(self.balas)<self.configuracion.balas_permitidas:
+            nueva_bala = Bala(self)
+            self.balas.add(nueva_bala)
 
 
     def cuenta_fps(self):
         self.fps = str(int(self.reloj.get_fps()))
         self.texto_fps = self.fuente.render(self.fps, 1, pygame.Color(COLOR_CLARO))
         self.pantalla.blit(self.texto_fps,(0,0))
-        self.reloj.tick(self.configuracion.fps)
 
+        self.cantidad_balas="Balas:"+str(len(self.balas))
+        self.texto_balas = self.fuente.render(self.cantidad_balas, 1, pygame.Color(COLOR_CLARO))
+        self.pantalla.blit(self.texto_balas,(0,20))
+        self.reloj.tick(self.configuracion.fps)
 
     def actualizar_pantalla(self):
         self.pantalla.fill(self.configuracion.pantalla_color)
         self.nave.actualizar_nave()
-        self.nave.dibujame()
+        self.nave.aparecer()
+        for bala in self.balas.sprites():
+            bala.dibujar_bala()
+            if bala.rect_bala.bottom<0:
+                self.balas.remove(bala)
+            
         self.cuenta_fps()
         pygame.display.flip() #dibuja la pantalla
 
