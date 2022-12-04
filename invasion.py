@@ -121,7 +121,8 @@ class Invasion:
             bala.dibujar_bala()
             if bala.rect.bottom<0:
                 self.balas.remove(bala)
-        colisiones = pygame.sprite.groupcollide(self.balas,self.aliens,True, True)
+        #la siguiente linea es casi trampa, borra los sprites que se chocan
+        self.colisiones = pygame.sprite.groupcollide(self.balas,self.aliens,True, True)
 
     def _actualiza_aliens(self):
         self.aliens.update()

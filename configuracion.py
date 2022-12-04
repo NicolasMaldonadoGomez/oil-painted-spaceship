@@ -8,7 +8,7 @@ class Configuracion:
         self.tamaño_propulsores = (20,150)
         self.tamaño_aliens      = (90,25)
         self.bala_velocidad     = 16.0
-        self.bala_ancho         = 3
+        self.bala_ancho         = 300 # Para pruebas
         self.bala_alto          = 10
         self.bala_color         = (220, 150, 150)
         self.balas_permitidas   = 3
